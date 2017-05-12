@@ -3,7 +3,6 @@ uses "file"
 type uniTestRunner
   private
   
-  _logFileName          as string
   _failLog              as string
   _failCount            as long
   _testCount            as long
@@ -29,15 +28,15 @@ type uniTestRunner
   assertIsNotEmpty      as function
   assertError           as function
   
-  getFailureCount       as function
-  getFailureTestName    as function
-  getFailureAssertType  as function
-  getFailureDescription as function
-  getFailureComment     as function
+  getPassedCount        as function
+  getFailedCount        as function
+  getFailedTestName     as function
+  getFailedAssertType   as function
+  getFailedDescription  as function
+  getFailedComment      as function
   
   function _create()
     me.resetResults()
-    me._logFileName = app_sourcePath + "uniTestResults.txt"
   end function
     
   function resetResults()
@@ -93,13 +92,9 @@ type uniTestRunner
   end function
   
   ' Returns the number of failed tests
-  Function saveResults( Optional sFileName As String ) As Long    
+  function saveResults( sFileName As String ) As Long    
     me._failLog += "</body>"
     me._failLog = replace$(me._failLog, "<failCount>0</failCount>", "<failCount>" + me._failCount + "</failCount>")
-    
-    if (len(sFileName) = 0) then
-      sFileName = me._logFileName
-    end if
     
     file_save(sFileName, me._failLog)
             
@@ -111,4 +106,4 @@ end type
 #include "uniTest.bindapi.tbasicu"
 #include "uniTest.private.tbasicu"
 #include "uniTest.asserts.tbasicu"
-#include "uniTest.failure.tbasicu"
+#include "uniTest.results.tbasicu"
